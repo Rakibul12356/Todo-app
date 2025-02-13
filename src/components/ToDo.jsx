@@ -3,7 +3,7 @@ import todo_icon from "../assets/todo_icon.png"
 import TodoItems from "./TodoItems";
 
 const ToDo = () => {
-    const[datas,setDatas]=useState([])
+    const[todoList,setTodoList]=useState(localStorage.getItem("todos")?JSON.parse(localStorage.getItem("todos")):[])
     const inputRef = useRef()
     const add =()=>{
         const inputText=inputRef.current.value;
@@ -16,16 +16,16 @@ const ToDo = () => {
         text:inputText,
         isComplete: false,
       }
-      setDatas((prev)=>[...prev,newToDo])
+      setTodoList((prev)=>[...prev,newToDo])
       inputRef.current.value=""
     }
     const deleteTodo =(id)=>{
-        setDatas((prvTodos)=>{
+        setTodoList((prvTodos)=>{
            return prvTodos.filter((todo)=> todo.id !== id)
         })
     }
     const toggle = (id)=>{
-        setDatas((prevTodos)=>{
+        setTodoList((prevTodos)=>{
             return prevTodos.map((todo)=>{
                 if(todo.id === id ){
                     return {...todo,isComplete:!todo.isComplete}
@@ -36,8 +36,8 @@ const ToDo = () => {
     }
  
     useEffect(()=>{
-        console.log(datas)
-    },[datas])
+        localStorage.setItem("todos",JSON.stringify(todoList))
+    },[todoList])
     return (
         <div className="bg-white place-self-center w-11/12 flex flex-col p-7 max-w-md min-h-[500px] rounded-xl">
             {/**--------title------- */}
@@ -52,7 +52,7 @@ const ToDo = () => {
             </div>
              {/**-------to do list------- */}
              <div>
-                {datas.map((item,index)=><TodoItems 
+                {todoList.map((item,index)=><TodoItems 
                 key={index} 
                 text={item.text} 
                 id={item.id} 
